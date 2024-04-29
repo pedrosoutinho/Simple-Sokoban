@@ -8,6 +8,7 @@ class Tile(Enum):
     WALL = 3
     PLAYER = 4
     TARGET_BOX = 5
+    TARGET_PLAYER = 6
 
     def __str__(self) -> str:
         assert self in Tile, "Invalid tile"
@@ -17,7 +18,8 @@ class Tile(Enum):
             Tile.TARGET: '.',
             Tile.WALL: '#',
             Tile.PLAYER: '@',
-            Tile.TARGET_BOX: '*'
+            Tile.TARGET_BOX: '*',
+            Tile.TARGET_PLAYER: '+'
         }[self]
 
 
@@ -29,7 +31,8 @@ def parseTile(char: str) -> Tile:
         '.': Tile.TARGET,
         '#': Tile.WALL,
         '@': Tile.PLAYER,
-        '*': Tile.TARGET_BOX
+        '*': Tile.TARGET_BOX,
+        '+': Tile.TARGET_PLAYER
     }[char]
 
 

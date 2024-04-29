@@ -21,7 +21,7 @@ class State:
         if not self.inBounds(endPos):
             return False
 
-        if endPos.value(self.tiles) != Tile.EMPTY:
+        if endPos.value(self.tiles) not in [Tile.EMPTY, Tile.TARGET]:
             return False
 
         if boxPos.value(self.tiles) == Tile.TARGET_BOX:
@@ -45,17 +45,25 @@ class State:
         if endPos.value(self.tiles) == Tile.WALL:
             return False
 
-        if endPos.value(self.tiles) == Tile.BOX:
+        if endPos.value(self.tiles) in [Tile.BOX, Tile.TARGET_BOX]:
             if not self.moveBox(endPos, delta):
                 return False
 
-        playerPos.setValue(self.tiles, Tile.EMPTY)
-        endPos.setValue(self.tiles, Tile.PLAYER)
+        if playerPos.value(self.tiles) == Tile.TARGET_PLAYER:
+            playerPos.setValue(self.tiles, Tile.TARGET)
+        else:
+            playerPos.setValue(self.tiles, Tile.EMPTY)
+
+        if endPos.value(self.tiles) == Tile.TARGET:
+            endPos.setValue(self.tiles, Tile.TARGET_PLAYER)
+        else:
+            endPos.setValue(self.tiles, Tile.PLAYER)
+
         return True
 
     def won(self) -> bool:
         for pos in self.positions():
-            if pos.value(self.tiles) == Tile.TARGET:
+            if pos.value(self.tiles) == Tile.BOX:
                 return False
         return True
 
@@ -63,3 +71,9 @@ class State:
         for y in range(self.length):
             for x in range(self.width):
                 yield Vector2D(x, y)
+
+    def playerPosition(self) -> Vector2D:
+        for pos in self.positions():
+            if pos.value(self.tiles) in [Tile.PLAYER, Tile.TARGET_PLAYER]:
+                return pos
+        raise ValueError("No player position found in state")

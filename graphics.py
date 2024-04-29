@@ -21,7 +21,8 @@ class Renderer:
         Tile.TARGET: targetSprite,
         Tile.WALL: wallSprite,
         Tile.PLAYER: playerSprite,
-        Tile.TARGET_BOX: correctSprite
+        Tile.TARGET_BOX: correctSprite,
+        Tile.TARGET_PLAYER: playerSprite
     }
 
     def __init__(self, state: State) -> None:

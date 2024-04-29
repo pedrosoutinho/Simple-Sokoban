@@ -3,8 +3,14 @@ import sys
 import pygame
 
 from gameState import State
-from utils import parseLevel
+from utils import Vector2D, parseLevel
 from graphics import Renderer
+from game import Game
+
+LEFT = Vector2D(-1, 0)
+RIGHT = Vector2D(1, 0)
+UP = Vector2D(0, -1)
+DOWN = Vector2D(0, 1)
 
 if __name__ == '__main__':
     # choose level
@@ -22,9 +28,29 @@ if __name__ == '__main__':
     initialState = State(parseLevel(levelData))
     renderer = Renderer(initialState)
     renderer.updateState(initialState)
+    game = Game(initialState)
 
-    while (True):
+    while not game.won():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 renderer.close()
                 quit()
+
+            elif event.type == pygame.KEYDOWN:
+                if event.key in [pygame.K_w, pygame.K_UP]:
+                    game.movePlayer(UP)
+                elif event.key in [pygame.K_s, pygame.K_DOWN]:
+                    game.movePlayer(DOWN)
+                elif event.key in [pygame.K_a, pygame.K_LEFT]:
+                    game.movePlayer(LEFT)
+                elif event.key in [pygame.K_d, pygame.K_RIGHT]:
+                    game.movePlayer(RIGHT)
+                elif event.key == pygame.K_r:
+                    game.resetGame()
+                elif event.key == pygame.K_BACKSPACE:
+                    game.undoMove()
+
+                renderer.updateState(game.currentState())
+
+    print("gg")
+    renderer.close()
